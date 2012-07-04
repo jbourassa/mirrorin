@@ -1,6 +1,6 @@
 require 'net/http'
 
-class GhServe
+class Mirror
 
   @@https_domains = ['raw.github.com']
 
