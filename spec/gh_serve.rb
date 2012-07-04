@@ -1,38 +1,30 @@
 require File.join(File.dirname(__FILE__), '../lib/gh_serve.rb')
 describe GhServe do
-  before :each do
-    #@gh_serve = double(GhServe)
-  end
 
   it "should throw InvalidUrl when no url" do
-    invalid_urls = [nil, '', 'http://any-invalid-url222.com']
+    invalid_urls = [ [nil, nil], ['', ''], ['any-invalid-url222', '/'] ]
     invalid_urls.each do |url|
-      lambda { GhServe.new(url).raw_content }.should raise_error URI::InvalidURIError
+      lambda { GhServe.new(*url).content }.should raise_error URI::InvalidURIError
     end
   end
 
-  describe "#new_file_url" do
-    before :each do
-      @base = "http://b.com"
-      @gh_serve = GhServe.new("#{@base}/nested/index.html")
+  describe "#build_uri" do
+    it "should switch to https if domain is in https list" do
+      gh_serve = GhServe.new('raw.github.com', '/some/file.html')
+      gh_serve.build_uri.should == 'https://raw.github.com/some/file.html'
     end
 
-    it "return inchanged absolute path" do
-      file_url = "http://c.com/styles.css"
-      @gh_serve.new_file_url(file_url).should == file_url
+    it "should use http if domain isn't in https list" do
+      gh_serve = GhServe.new('non-https-domain.com', '/file.html')
+      gh_serve.build_uri.should == 'http://non-https-domain.com/file.html'
     end
-
-    it "return serving path with relative-absolute path" do
-      file_url = "/styles/styles.css"
-      expected_url = format(GhServe.serving_url, "#{@base}#{file_url}")
-      @gh_serve.new_file_url(file_url).should == expected_url
-    end
-
-    it "return serving path with relative path" do
-      file_url = "styles.css"
-      expected_url = format(GhServe.serving_url, "#{@base}/nested/#{file_url}")
-      @gh_serve.new_file_url(file_url).should == expected_url
-    end
-
   end
+
+  describe "#headers" do
+    it "should set Content-Type" do
+      gh_serve = GhServe.new('domain.com', '/file.html')
+      gh_serve.headers["Content-Type"].should == 'text/html'
+    end
+  end
+
 end
