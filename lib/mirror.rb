@@ -1,4 +1,5 @@
 require 'net/http'
+require 'rack/mime'
 
 class Mirror
 
@@ -10,7 +11,7 @@ class Mirror
   end
 
   def headers
-    { "Content-Type" => MimeTypes.for_ext(url_ext, :html) }
+    { "Content-Type" => Rack::Mime.mime_type(url_ext, "text/html") }
   end
 
   def content
@@ -18,7 +19,7 @@ class Mirror
   end
 
   def url_ext
-    @url.split('.').last.to_sym
+    File.extname @url
   end
 
   def build_uri
