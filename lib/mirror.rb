@@ -49,20 +49,3 @@ class Mirror
   end
 
 end
-
-class MimeTypes
-  TYPES = {
-    html: 'text/html',
-    htm:  'text/html',
-    css:  'text/css',
-    js:   'application/javascript',
-    jpg:  'image/jpeg',
-    jpeg: 'image/jpeg',
-    png:  'image/png',
-    gif:  'image/gif',
-  }
-
-  def self.for_ext type, fallback
-    TYPES[type.to_sym] || TYPES[fallback.to_sym]
-  end
-end
