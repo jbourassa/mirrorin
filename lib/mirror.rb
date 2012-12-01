@@ -11,7 +11,8 @@ class Mirror
   end
 
   def headers
-    { "Content-Type" => Rack::Mime.mime_type(url_ext, "text/html") }
+    { "Content-Type" => Rack::Mime.mime_type(url_ext, "text/html"),
+      "Access-Control-Allow-Origin" => "*" }
   end
 
   def content
