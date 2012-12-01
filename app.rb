@@ -17,8 +17,9 @@ end
 get '*' do
   domain = extract_request_domain(request.host, ENV["DOMAIN"])
   path   = request.path
+  query  = request.query_string
   begin
-    mirror = Mirror.new(domain, path)
+    mirror = Mirror.new(domain, path, query)
     [200, mirror.headers, mirror.content]
   rescue URI::InvalidURIError
     [400, {}, "URL required"]
