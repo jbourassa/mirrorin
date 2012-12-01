@@ -5,9 +5,14 @@ class Mirror
 
   @@https_domains = ['raw.github.com']
 
-  def initialize domain, url, params = {}
+  def initialize domain, url, query = "", params = {}
     @domain = domain
     @url = url
+    if query.empty?
+      @query = query
+    else
+      @query = "?#{query}"
+    end
   end
 
   def headers
@@ -25,7 +30,7 @@ class Mirror
 
   def build_uri
     scheme =  https? ? 'https' : 'http'
-    "#{scheme}://#{@domain}#{@url}"
+    "#{scheme}://#{@domain}#{@url}#{@query}"
   end
 
   def https?
